@@ -28,3 +28,10 @@ program.key(['q', 'escape', 'C-c'], function() {
   program.normalBuffer();
   process.exit(0);
 });
+
+program.on('keypress', function(ch, data) {
+  if (data.name === 'mouse') return;
+  program.clear();
+  program.cup(0, 0);
+  console.log(data);
+});
