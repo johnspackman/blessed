@@ -54,7 +54,7 @@ box.on('click', function(data) {
 });
 
 // If box is focused, handle `enter`/`return` and give us some more content.
-box.key(['enter', 'return'], function(ch, key) {
+box.key('enter', function(ch, key) {
   box.setContent('{right}Even different {black-fg}content{/black-fg}.{/right}\n');
   box.setLine(1, 'bar');
   box.insertLine(1, 'foo');
@@ -153,6 +153,9 @@ The screen on which every other node renders.
   (not just full-width ones, elements with uniform cells to their sides).
   this is known to cause flickering with elements that are not full-width,
   however, it is more optimal for terminal rendering.
+- **fastCSR** - do CSR on any element within 20 cols of the screen edge on
+  either side. faster than smartCSR, but may cause flickering depending on
+  what is on each side of the element.
 - **useBCE** - attempt to perform `back_color_erase` optimizations for terminals
   that support it. it will also work with terminals that don't support it, but
   only on lines with the default background color. as it stands with the current
@@ -291,6 +294,7 @@ The base element.
   `right` and `bottom` do not accept keywords.
 - **position** - can contain the above options.
 - **scrollable** - whether the element is scrollable or not.
+- **ch** - background character (default is whitespace ` `).
 
 ##### Properties:
 
@@ -354,6 +358,9 @@ The base element.
 - **unkey(name, listener)** - remove a keypress listener for a specific key.
 - **onScreenEvent(type, listener)** - same as`el.on('screen', ...)` except this
   will automatically cleanup listeners after the element is detached.
+- **setIndex(z)** - set the z-index of the element (changes rendering order).
+- **setFront()** - put the element in front of its siblings.
+- **setBack()** - put the element in back of its siblings.
 
 ###### Content Methods
 
@@ -470,12 +477,17 @@ A box with scrollable content.
 
 - inherits all from Box.
 - **scroll** - received when the element is scrolled.
-- **resetScroll** - reset scroll offset to zero.
 
 ##### Methods:
 
-- **scroll(offset)** - scroll the content by an offset.
+- **scroll(offset)** - scroll the content by a relative offset.
 - **scrollTo(index)** - scroll the content to an absolute index.
+- **setScroll(index)** - same as `scrollTo`.
+- **setScrollPerc(perc)** - set the current scroll index in percentage (0-100).
+- **getScroll()** - get the current scroll index in lines.
+- **getScrollHeight()** - get the actual height of the scrolling area.
+- **getScrollPerc()** - get the current scroll index in percentage.
+- **resetScroll()** - reset the scroll index to its initial state.
 
 
 #### ScrollableText (from ScrollableBox)
